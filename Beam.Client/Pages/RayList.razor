@@ -2,19 +2,7 @@
 @inject DataService data
 
 
-<p>
-    <div class="card">
-        <div class="card-body">
-            <span class="card-title">Cast a New Ray:</span>
-            <div class="input-group">
-                <input @bind="newRayText" class="form-control" />
-                <div class="input-group-append">
-                    <button @onclick="CastRay" type="button" class="btn btn-outline-secondary"><span class="oi oi-audio"></span></button>
-                </div>
-            </div>
-        </div>
-    </div>
-</p>
+<RayInput @bind-newRayText="newRayText" />
 @foreach (var ray in data.Rays)
 {
     <p>
@@ -31,13 +19,18 @@
 
     protected override void OnParametersSet()
     {
-        data.UpdatedRays += StateHasChanged;
+        data.UpdatedRays += UpdateForNewRays;
         data.SelectedFrequency = Id;
     }
     
-    async Task CastRay()
+    void UpdateForNewRays()
     {
-        await data.CreateRay(newRayText);
-        newRayText = "";
+        if (data.Rays.Any(r => r.UserName == data.CurrentUser.Name) == false )
+        {
+            newRayText = $"Hello, my name is {data.CurrentUser.Name}";
+        }
+        StateHasChanged();
     }
+
+
 }
