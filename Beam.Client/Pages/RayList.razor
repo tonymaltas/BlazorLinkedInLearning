@@ -2,7 +2,10 @@
 @inject DataService data
 
 
-<RayInput @bind-newRayText="newRayText" />
+<RayInput @bind-newRayText="newRayText" RayCast="@RayCast" />
+<div class="spinner-border" role="status" hidden="@HideLoading">
+    <span class="sr-only">Loading. . .</span>
+</div>
 @foreach (var ray in data.Rays)
 {
     <p>
@@ -17,6 +20,8 @@
 
     public string newRayText { get; set; }
 
+    public bool HideLoading {get; set; } = false;
+
     protected override void OnParametersSet()
     {
         data.UpdatedRays += UpdateForNewRays;
@@ -25,6 +30,7 @@
     
     void UpdateForNewRays()
     {
+        HideLoading = true;
         if (data.Rays.Any(r => r.UserName == data.CurrentUser.Name) == false )
         {
             newRayText = $"Hello, my name is {data.CurrentUser.Name}";
@@ -32,5 +38,10 @@
         StateHasChanged();
     }
 
+
+    void RayCast()
+    {
+        HideLoading = false;
+    }
 
 }
