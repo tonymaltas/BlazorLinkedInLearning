@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using Beam.Shared;
 
 namespace Beam.Client.Services{
-    public class BeamApiService{
+    public class BeamApiService : IBeamApiService
+    {
         HttpClient http;
 
         public BeamApiService(HttpClient httpClient)
