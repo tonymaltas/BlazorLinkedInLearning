@@ -15,13 +15,13 @@
 <li class="nav-item px-3">
     <EditForm Model="@newFrequency" OnValidSubmit="AddFrequency">
         <DataAnnotationsValidator/>
-    <div class="input-group">
-        <InputText @bind-Value="newFrequency.Name" placeholder="New Frequency" class="form-control" />
-        <div class="input-group-append">
-            <button type="submit" class="btn btn-secondary"><span class="oi oi-plus"></span></button>
+        <div class="input-group">
+            <InputText @bind-Value="newFrequency.Name" placeholder="New Frequency" class="form-control" />
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-secondary"><span class="oi oi-plus"></span></button>
+            </div>
         </div>
-    </div>
-    <ValidationMessage For="@(() => newFrequency.Name)" />
+        <ValidationMessage For="@(() => newFrequency.Name)" />
     </EditForm>
 </li>
 

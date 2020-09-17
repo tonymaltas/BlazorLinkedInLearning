@@ -2,16 +2,18 @@
 
 <SnapshotTest Description="Ray Input with parameter" Setup="@Setup">
     <TestInput>
-        <RayInput newRayText="Test Text"></RayInput>
+        <RayInput newRay="@(new RayToCast(){ Text = "Test Text" })"></RayInput>
     </TestInput>
     <ExpectedOutput>
         <p>
         </p>
         <Card Title="Cast a new ray:">
+            <form>
             <div class="input-group">
-            <input class="form-control" value="Test Text" >
-            <div diff:ignore ></div>
+                <input class="form-control valid" value="Test Text" >
+                <div diff:ignore ></div>
             </div>
+            </form>
         </Card>
         <p></p>
     </ExpectedOutput>
@@ -23,3 +25,82 @@
         }
     }
 </SnapshotTest>
+
+<Fixture Description="Ray not created for empty input" Test="EmptyInputDoesntCreate">
+    <ComponentUnderTest>
+        <RayInput newRay="@(new RayToCast())"></RayInput>
+    </ComponentUnderTest>
+    <Fragment>
+        <p></p>
+        <Card Title="Cast a new ray:">
+            <form>
+                <div class="input-group">
+                    <input class="form-control invalid" value="" >
+                    <div diff:ignore ></div>
+                </div>
+                <div class="validation-message">You can't cast an empty Ray!</div>
+            </form>
+        </Card>
+        <p></p>
+    </Fragment>
+</Fixture>
+
+<Fixture Description="Ray created with valid input" Test="ValidInputCallsCreate">
+    <ComponentUnderTest>
+        <RayInput newRay="@(new RayToCast(){ Text = "Test"})"></RayInput>
+    </ComponentUnderTest>
+    <Fragment>
+        <p></p>
+        <Card Title="Cast a new ray:">
+            <form>
+                <div class="input-group">
+                    <input class="form-control valid" value="Test" >
+                    <div diff:ignore ></div>
+                </div>
+            </form>
+        </Card>
+        <p></p>
+    </Fragment>
+</Fixture>
+
+@code
+{
+    public void EmptyInputDoesntCreate(Fixture fixture)
+    {
+        //Arrange
+        var dataService = new TestDataService();
+        fixture.Services.AddSingleton<IDataService>(dataService);
+        var cut = fixture.GetComponentUnderTest<RayInput>(); 
+
+        bool updateTriggered = false;
+        dataService.UpdatedRays += () => updateTriggered = true;
+        
+        //Act
+        cut.Find("Form").Submit();
+        
+        //Assert
+        var expected = fixture.GetFragment();
+        Assert.False(updateTriggered);
+        cut.MarkupMatches(expected);       
+    }
+
+    public void ValidInputCallsCreate(Fixture fixture)
+    {
+        //Arrange
+        var dataService = new TestDataService();
+        fixture.Services.AddSingleton<IDataService>(dataService);
+        var cut = fixture.GetComponentUnderTest<RayInput>(); 
+
+        bool updateTriggered = false;
+        dataService.UpdatedRays += () => updateTriggered = true;
+        
+        //Act
+        cut.Find("Form").Submit();
+        
+        //Assert
+        var expected = fixture.GetFragment();
+        Assert.True(updateTriggered);
+        cut.MarkupMatches(expected);       
+    }
+
+}
