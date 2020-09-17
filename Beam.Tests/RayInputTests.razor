@@ -1,0 +1,25 @@
+@inherits TestComponentBase
+
+<SnapshotTest Description="Ray Input with parameter" Setup="@Setup">
+    <TestInput>
+        <RayInput newRayText="Test Text"></RayInput>
+    </TestInput>
+    <ExpectedOutput>
+        <p>
+        </p>
+        <Card Title="Cast a new ray:">
+            <div class="input-group">
+            <input class="form-control" value="Test Text" >
+            <div diff:ignore ></div>
+            </div>
+        </Card>
+        <p></p>
+    </ExpectedOutput>
+    @code
+    {
+        void Setup(SnapshotTest test)
+        {
+            test.Services.AddSingleton<IDataService, TestDataService>();
+        }
+    }
+</SnapshotTest>

@@ -1,29 +1,7 @@
 ﻿@inherits TestComponentBase
-@*
-    This is a special Blazor component, which contains razor tests.
 
-    These tests are written in a mix of C# and Razor syntax.
 
-    The first test is a snapshot test, that will automatically perform a semantic
-    comparison of the rendered output of TestInput with that of ExpectedOutput.
 
-    The second is a Fixture test, where you can declare the component under test
-    and additional fragments that can be used in the "act" and "assertion" phases
-    of the test, which runs in the related test method(s).
-
-    Learn more at https://bunit.egilhansen.com/docs/
-*@
-
-<SnapshotTest Description="Counter starts at zero">
-    <TestInput>
-        <Counter />
-    </TestInput>
-    <ExpectedOutput>
-        <h1>Counter</h1>
-        <p>Current count: 0</p>
-        <button class="btn btn-primary">Click me</button>
-    </ExpectedOutput>
-</SnapshotTest>
 
 <Fixture Description="Add a new frequency appears in the list" Test="TestFrequencyListAdd">
     <ComponentUnderTest>
