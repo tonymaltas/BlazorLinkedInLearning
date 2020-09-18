@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Beam.Data;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace Beam.Server
 {
@@ -23,6 +25,19 @@ namespace Beam.Server
         {
             Data.Configure.ConfigureServices(services, Configuration.GetConnectionString("DefaultConnection"));
 
+            services.AddIdentity<AuthUser, IdentityRole>()
+                .AddEntityFrameworkStores<BeamContext>();
+            
+            services.ConfigureApplicationCookie(options =>
+                {
+                    options.Cookie.HttpOnly = false;
+                    options.Events.OnRedirectToLogin = context =>
+                        {
+                            context.Response.StatusCode = 401;
+                            return Task.CompletedTask;
+                        };
+                });
+            
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -46,6 +61,8 @@ namespace Beam.Server
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
            
             app.UseEndpoints(endpoints =>
             {
