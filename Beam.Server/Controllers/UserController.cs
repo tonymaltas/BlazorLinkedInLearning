@@ -15,7 +15,7 @@ namespace Beam.Server.Controllers
             _context = context;
         }
 
-        [HttpGet("[action]/{Username}")]
+        [HttpGet]
         public User Get()
         {
             var appUser = _context.AppUsers.FirstOrDefault(ap => ap.Username == User.Identity.Name);
@@ -34,7 +34,8 @@ namespace Beam.Server.Controllers
                 return new Beam.Shared.User{
                     IsAuthenticated = false,
                     Name = "Anon",
-                    Id = 1
+                    Id = 1,
+                    Claims = new System.Collections.Generic.Dictionary<string, string>()
                 };
             }
         }

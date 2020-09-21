@@ -1,23 +1,12 @@
 @page "/settings"
 @inject IDataService data
 
-<span>Username</span>
-<div class="input-group">
-    <input @bind="name" class="form-control" />
-    <div class="input-group-append">
-        <button @onclick="UpdateUser" type="button" class="btn btn-outline-secondary">Update</button>
-    </div>
-</div>
 
-@code{
-    private string name = "";
-
-    protected override void OnInitialized()
-    {
-        name = data.CurrentUser.Name;
-    }
-    async Task UpdateUser()
-    {
-        await data.GetOrCreateUser(name);
-    }
-}
+<AuthorizeView>
+    <Authorized>
+        <span>Username</span>
+        <div class="input-group">
+            <label class="form-control" >@context.User.Identity.Name</label>
+        </div>
+    </Authorized>
+</AuthorizeView>
