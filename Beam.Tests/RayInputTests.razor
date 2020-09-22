@@ -22,6 +22,7 @@
         void Setup(SnapshotTest test)
         {
             test.Services.AddSingleton<IDataService, TestDataService>();
+            test.Services.AddSingleton<ILocalStorageService, TestLocalStorage>();
         }
     }
 </SnapshotTest>
@@ -54,7 +55,7 @@
         <Card Title="Cast a new ray:">
             <form>
                 <div class="input-group">
-                    <input class="form-control valid" value="Test" >
+                    <input class="form-control valid" value="" >
                     <div diff:ignore ></div>
                 </div>
             </form>
@@ -70,6 +71,7 @@
         //Arrange
         var dataService = new TestDataService();
         fixture.Services.AddSingleton<IDataService>(dataService);
+        fixture.Services.AddSingleton<ILocalStorageService, TestLocalStorage>();
         var cut = fixture.GetComponentUnderTest<RayInput>(); 
 
         bool updateTriggered = false;
@@ -89,6 +91,7 @@
         //Arrange
         var dataService = new TestDataService();
         fixture.Services.AddSingleton<IDataService>(dataService);
+        fixture.Services.AddSingleton<ILocalStorageService, TestLocalStorage>();
         var cut = fixture.GetComponentUnderTest<RayInput>(); 
 
         bool updateTriggered = false;
