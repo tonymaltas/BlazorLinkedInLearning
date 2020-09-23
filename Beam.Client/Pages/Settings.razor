@@ -5,12 +5,12 @@
 
 <AuthorizeView>
     <Authorized>
+        <div id="animationHost"></div>
         <span>Username</span>
         <div class="input-group">
             <label class="form-control" >@context.User.Identity.Name</label>
         </div>
         <span>You watched the beam @beamPasses times</span>
-        <div id="animationHost"></div>
     </Authorized>
 </AuthorizeView>
 
@@ -20,7 +20,7 @@
     {
         if (firstRender)
         {
-            await animationService.LoadAnimation("animationHost", 1000, 200);
+            await animationService.LoadAnimation("animationHost", 1000, 100);
             AnimationService.BeamPassTriggered += IncrementBeamPasses;
         }
     }

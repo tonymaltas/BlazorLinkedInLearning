@@ -1,5 +1,19 @@
 @inherits TestComponentBase
 
+@code{
+    private TestDataService dataService;
+    private MockJsRuntimeInvokeHandler jsMock;
+
+    private void RayInputTestServiceSetUp(TestServiceProvider services)
+    {
+        jsMock = services.AddMockJsRuntime();
+        dataService = new TestDataService();
+        services.AddSingleton<IDataService>(dataService);
+        services.AddSingleton<ILocalStorageService, TestLocalStorage>();               
+    }
+
+}
+
 <SnapshotTest Description="Ray Input with parameter" Setup="@Setup">
     <TestInput>
         <RayInput newRay="@(new RayToCast(){ Text = "Test Text" })"></RayInput>
@@ -21,8 +35,7 @@
     {
         void Setup(SnapshotTest test)
         {
-            test.Services.AddSingleton<IDataService, TestDataService>();
-            test.Services.AddSingleton<ILocalStorageService, TestLocalStorage>();
+            RayInputTestServiceSetUp(test.Services);
         }
     }
 </SnapshotTest>
@@ -64,14 +77,19 @@
     </Fragment>
 </Fixture>
 
+<Fixture Description="Element focus calls are made against Java Script" Test="ValidateJavascriptFocus">
+    <ComponentUnderTest>
+        <RayInput newRay="@(new RayToCast(){ Text = "Test"})"></RayInput>
+    </ComponentUnderTest>
+</Fixture>
+
 @code
 {
     public void EmptyInputDoesntCreate(Fixture fixture)
     {
         //Arrange
-        var dataService = new TestDataService();
-        fixture.Services.AddSingleton<IDataService>(dataService);
-        fixture.Services.AddSingleton<ILocalStorageService, TestLocalStorage>();
+        RayInputTestServiceSetUp(fixture.Services);
+        
         var cut = fixture.GetComponentUnderTest<RayInput>(); 
 
         bool updateTriggered = false;
@@ -89,10 +107,9 @@
     public void ValidInputCallsCreate(Fixture fixture)
     {
         //Arrange
-        var dataService = new TestDataService();
-        fixture.Services.AddSingleton<IDataService>(dataService);
-        fixture.Services.AddSingleton<ILocalStorageService, TestLocalStorage>();
-        var cut = fixture.GetComponentUnderTest<RayInput>(); 
+        RayInputTestServiceSetUp(fixture.Services);
+       
+       var cut = fixture.GetComponentUnderTest<RayInput>(); 
 
         bool updateTriggered = false;
         dataService.UpdatedRays += () => updateTriggered = true;
@@ -104,6 +121,22 @@
         var expected = fixture.GetFragment();
         Assert.True(updateTriggered);
         cut.MarkupMatches(expected);       
+    }
+
+
+    public void ValidateJavascriptFocus(Fixture fixture)
+    {
+        //Arrange
+        RayInputTestServiceSetUp(fixture.Services);
+        
+        var cut = fixture.GetComponentUnderTest<RayInput>(); 
+
+        //Assert
+        var focusElement = cut.Find("div.input-group");
+
+        jsMock.VerifyInvoke("UIHelpers.focusFirstChild")
+            .Arguments.Single()
+            .ShouldBeElementReferenceTo(focusElement);
     }
 
 }
