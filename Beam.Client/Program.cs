@@ -26,6 +26,8 @@ namespace Beam.Client
             builder.Services.AddScoped<AuthenticationStateProvider>
                 (s => s.GetRequiredService<BeamAuthenticationStateProvider>());
             builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddSingleton<AnimationService>();
+
             await builder.Build().RunAsync();
         }
     }
