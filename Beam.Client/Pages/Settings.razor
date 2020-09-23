@@ -1,38 +1,13 @@
 @page "/settings"
-@inject IDataService data
-@inject AnimationService animationService;
-@implements IDisposable
 
 <AuthorizeView>
-    <Authorized>
-        <div id="animationHost"></div>
+    <Authorized>       
         <span>Username</span>
         <div class="input-group">
             <label class="form-control" >@context.User.Identity.Name</label>
         </div>
-        <span>You watched the beam @beamPasses times</span>
+        <AnimatedBeam />
     </Authorized>
 </AuthorizeView>
 
-@code{
-    int beamPasses = 0;
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await animationService.LoadAnimation("animationHost", 1000, 100);
-            AnimationService.BeamPassTriggered += IncrementBeamPasses;
-        }
-    }
 
-    void IncrementBeamPasses()
-    {
-        beamPasses++;
-        StateHasChanged();
-    }
-
-    public void Dispose()
-    {
-        AnimationService.BeamPassTriggered -= IncrementBeamPasses;
-    }
-}

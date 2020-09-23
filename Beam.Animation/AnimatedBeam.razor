@@ -1,0 +1,28 @@
+﻿@inject AnimationService animationService;
+@implements IDisposable
+
+<span>You watched the beam @beamPasses times</span>
+<div id="animationHost"></div>
+
+@code{
+    int beamPasses = 0;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await animationService.LoadAnimation("animationHost", 1000, 100);
+            AnimationService.BeamPassTriggered += IncrementBeamPasses;
+        }
+    }
+
+    void IncrementBeamPasses()
+    {
+        beamPasses++;
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        AnimationService.BeamPassTriggered -= IncrementBeamPasses;
+    }
+}
