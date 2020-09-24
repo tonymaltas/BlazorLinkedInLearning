@@ -1,6 +1,6 @@
 ﻿@inject IDataService data
 
-<Card>
+<Beam.Client.Pages.Card>
     <div class="row-fluid">
         @if (!ray.UsersPrismed.Contains(data.CurrentUser.Name))
         {
@@ -19,7 +19,7 @@
     <div class="row-fluid">
         <NavLink href=@($"User/{ray.UserName}") class="col-2 float-right"><i>- @ray.UserName</i></NavLink>
     </div>
-</Card>
+</Beam.Client.Pages.Card>
 
 @code{
     [Parameter]
